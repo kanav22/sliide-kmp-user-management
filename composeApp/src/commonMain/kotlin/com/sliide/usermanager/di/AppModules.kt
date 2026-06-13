@@ -11,6 +11,8 @@ import com.sliide.usermanager.domain.usecase.DeleteUserUseCase
 import com.sliide.usermanager.domain.usecase.DeleteUserUseCaseImpl
 import com.sliide.usermanager.domain.usecase.GetLastPageUsersUseCase
 import com.sliide.usermanager.domain.usecase.GetLastPageUsersUseCaseImpl
+import com.sliide.usermanager.domain.usecase.ObserveUsersUseCase
+import com.sliide.usermanager.domain.usecase.ObserveUsersUseCaseImpl
 import com.sliide.usermanager.data.local.db.SliideDatabase
 import com.sliide.usermanager.presentation.userlist.UserListViewModel
 import io.ktor.client.HttpClient
@@ -59,6 +61,7 @@ val repositoryModule = module {
 }
 
 val domainModule = module {
+    single<ObserveUsersUseCase>     { ObserveUsersUseCaseImpl(get()) }
     single<GetLastPageUsersUseCase> { GetLastPageUsersUseCaseImpl(get()) }
     single<AddUserUseCase>          { AddUserUseCaseImpl(get()) }
     single<DeleteUserUseCase>       { DeleteUserUseCaseImpl(get()) }

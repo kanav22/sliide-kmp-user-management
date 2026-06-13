@@ -67,7 +67,6 @@
 				43BEF7AB2B2C0F6E00000032 /* Sources */,
 				43BEF7AB2B2C0F6E00000010 /* Frameworks */,
 				43BEF7AB2B2C0F6E00000033 /* Resources */,
-				43BEF7AB2B2C0F6E00000034 /* ShellScript - Embed Framework */,
 			);
 			buildRules = (
 			);
@@ -135,24 +134,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/..\"\n./gradlew :composeApp:embedAndSignAppleFrameworkForXcode\n";
-		};
-		43BEF7AB2B2C0F6E00000034 /* ShellScript - Embed Framework */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Kotlin Framework";
-			outputFileListPaths = (
-			);
-			outputPaths = (
+				"$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)/ComposeApp.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

@@ -10,6 +10,7 @@ import com.sliide.usermanager.domain.model.UserStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 
 class UserLocalDataSource(private val db: SliideDatabase) {
@@ -20,18 +21,18 @@ class UserLocalDataSource(private val db: SliideDatabase) {
             .mapToList(Dispatchers.Default)
             .map { entities -> entities.map { it.toDomain() } }
 
-    fun insertOrIgnore(
+    suspend fun insertOrIgnore(
         id: Long,
         name: String,
         email: String,
         gender: String,
         status: String,
         addedAt: String,
-    ) {
+    ) = withContext(Dispatchers.Default) {
         db.userQueries.insertOrIgnore(id, name, email, gender, status, addedAt)
     }
 
-    fun deleteById(id: Long) {
+    suspend fun deleteById(id: Long) = withContext(Dispatchers.Default) {
         db.userQueries.deleteById(id)
     }
 

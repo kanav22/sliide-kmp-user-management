@@ -9,6 +9,7 @@ import com.sliide.usermanager.domain.repository.ValidationException
 import com.sliide.usermanager.domain.usecase.AddUserUseCaseImpl
 import com.sliide.usermanager.domain.usecase.DeleteUserUseCaseImpl
 import com.sliide.usermanager.domain.usecase.GetLastPageUsersUseCaseImpl
+import com.sliide.usermanager.domain.usecase.ObserveUsersUseCaseImpl
 import com.sliide.usermanager.fakes.FakeUserRepository
 import com.sliide.usermanager.fakes.testUser
 import com.sliide.usermanager.presentation.userlist.UserListEffect
@@ -40,10 +41,10 @@ class UserListViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         repo = FakeUserRepository()
         vm = UserListViewModel(
-            getLastPageUsers = GetLastPageUsersUseCaseImpl(repo),
-            addUserUseCase   = AddUserUseCaseImpl(repo),
+            observeUsers      = ObserveUsersUseCaseImpl(repo),
+            getLastPageUsers  = GetLastPageUsersUseCaseImpl(repo),
+            addUserUseCase    = AddUserUseCaseImpl(repo),
             deleteUserUseCase = DeleteUserUseCaseImpl(repo),
-            repository       = repo,
         )
     }
 

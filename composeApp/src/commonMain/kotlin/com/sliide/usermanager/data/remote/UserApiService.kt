@@ -18,19 +18,23 @@ import kotlinx.datetime.Clock
 
 class UserApiService(private val client: HttpClient) {
 
+    companion object {
+        private const val USERS_URL = "https://gorest.co.in/public/v2/users"
+    }
+
     suspend fun fetchLastPage(): List<UserDto> {
-        val probe: HttpResponse = client.get("https://gorest.co.in/public/v2/users") {
+        val probe: HttpResponse = client.get(USERS_URL) {
             parameter("page", 1)
         }
         val lastPage = probe.headers["X-Pagination-Pages"]?.toIntOrNull() ?: 1
         if (lastPage == 1) return probe.body()
-        return client.get("https://gorest.co.in/public/v2/users") {
+        return client.get(USERS_URL) {
             parameter("page", lastPage)
         }.body()
     }
 
     suspend fun createUser(name: String, email: String, gender: String, status: String): User {
-        val response: HttpResponse = client.post("https://gorest.co.in/public/v2/users") {
+        val response: HttpResponse = client.post(USERS_URL) {
             contentType(ContentType.Application.Json)
             setBody(CreateUserRequest(name, email, gender, status))
         }
@@ -42,6 +46,10 @@ class UserApiService(private val client: HttpClient) {
     }
 
     suspend fun deleteUser(id: Long) {
-        client.delete("https://gorest.co.in/public/v2/users/$id")
+        val response = client.delete("$USERS_URL/$id")
+        // 204 = deleted, 404 = already gone — both are success for idempotency
+        if (response.status != HttpStatusCode.NoContent && response.status != HttpStatusCode.NotFound) {
+            response.body<Unit>()
+        }
     }
 }

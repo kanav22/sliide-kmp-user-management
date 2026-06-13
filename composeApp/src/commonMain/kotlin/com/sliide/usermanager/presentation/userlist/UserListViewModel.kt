@@ -8,7 +8,7 @@ import com.sliide.usermanager.domain.repository.ValidationException
 import com.sliide.usermanager.domain.usecase.AddUserUseCase
 import com.sliide.usermanager.domain.usecase.DeleteUserUseCase
 import com.sliide.usermanager.domain.usecase.GetLastPageUsersUseCase
-import com.sliide.usermanager.domain.repository.UserRepository
+import com.sliide.usermanager.domain.usecase.ObserveUsersUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,10 +18,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class UserListViewModel(
+    private val observeUsers: ObserveUsersUseCase,
     private val getLastPageUsers: GetLastPageUsersUseCase,
     private val addUserUseCase: AddUserUseCase,
     private val deleteUserUseCase: DeleteUserUseCase,
-    private val repository: UserRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UserListState())
@@ -32,7 +32,7 @@ class UserListViewModel(
 
     init {
         viewModelScope.launch {
-            repository.observeUsers().collect { users ->
+            observeUsers().collect { users ->
                 _state.update { it.copy(users = users) }
             }
         }
@@ -70,8 +70,8 @@ class UserListViewModel(
 
     private fun loadUsers() {
         viewModelScope.launch {
-            val hasCache = _state.value.users.isEmpty()
-            if (hasCache) _state.update { it.copy(isLoading = true) }
+            val cacheIsEmpty = _state.value.users.isEmpty()
+            if (cacheIsEmpty) _state.update { it.copy(isLoading = true) }
             val result = getLastPageUsers()
             _state.update { it.copy(isLoading = false, error = if (result.isFailure) classifyError(result.exceptionOrNull()) else null) }
         }
