@@ -54,7 +54,7 @@ echo "GOREST_TOKEN=your_token_here" >> local.properties
 
 ### iOS
 
-Create `composeApp/src/iosMain/kotlin/com/sliide/usermanager/config/Secrets.ios.kt`:
+Create the file `composeApp/src/iosMain/kotlin/com/sliide/usermanager/config/Secrets.ios.kt` with your token:
 
 ```kotlin
 package com.sliide.usermanager.config
@@ -64,7 +64,7 @@ object Secrets {
 }
 ```
 
-> This file is gitignored. Never commit your token.
+> This file is gitignored and is **not included in the repository**. You must create it manually before building for iOS. Without it the app will show a token-missing error banner (no crash, no silent 401).
 
 **Missing token behaviour**: if the token is blank, the app skips all network requests and shows a clear error: *"API token not configured. See README → Token Setup."* Cached data (if any) remains visible. No silent 401 loops.
 
@@ -310,6 +310,19 @@ Adaptive behaviour (single-pane portrait, dual-pane landscape/tablet) is the req
 | --------- |
 | <img src="docs/screenshots/ios_portrait.png" width="220" alt="iOS user list"> |
 
+
+---
+
+## AI & Tooling
+
+AI-assisted development tools were used during this project to accelerate specific parts of the build:
+
+- **Boilerplate generation** — scaffolding repetitive MVI contracts (`State`, `Intent`, `Effect`), SQLDelight `.sq` schema, and Koin module wiring
+- **Regex & validation logic** — generating and stress-testing name/email validation patterns against edge cases
+- **Test case enumeration** — surfacing edge cases for ViewModel tests (422 field errors, race conditions, token-missing state, offline add/delete) that are easy to miss manually
+- **Dependency compatibility checks** — verifying version constraints across the KMP stack (Kotlin ↔ AGP ↔ Compose ↔ Koin KLIB ABI)
+
+All architectural decisions — MVI structure, offline-first strategy, delete/undo timing, adaptive layout approach, `INSERT OR IGNORE` semantics — were designed, reviewed, and iterated on manually. Generated code was reviewed and often revised before being accepted.
 
 ---
 
