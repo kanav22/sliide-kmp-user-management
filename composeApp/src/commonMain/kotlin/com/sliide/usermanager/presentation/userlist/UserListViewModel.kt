@@ -90,6 +90,9 @@ class UserListViewModel(
         }
     }
 
+    // The API call is deliberately deferred to finalizeDelete(), which only runs after the
+    // Snackbar is dismissed without Undo. This eliminates the race condition where an Undo
+    // tap arrives after the DELETE request has already been sent to the server.
     private fun confirmDelete(user: com.sliide.usermanager.domain.model.User) {
         _state.update {
             it.copy(

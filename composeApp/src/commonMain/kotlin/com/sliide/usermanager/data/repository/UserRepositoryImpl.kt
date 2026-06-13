@@ -19,6 +19,8 @@ class UserRepositoryImpl(
     override suspend fun refreshLastPage(): Result<Unit> = runCatching {
         val users = apiService.fetchLastPage()
         val now = Clock.System.now()
+        // INSERT OR IGNORE preserves the original addedAt for rows already in the cache.
+        // A refresh must not reset when the user was first seen locally.
         users.forEach { dto ->
             localDataSource.insertOrIgnore(
                 id = dto.id,

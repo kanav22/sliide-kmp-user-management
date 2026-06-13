@@ -21,6 +21,8 @@ class UserLocalDataSource(private val db: SliideDatabase) {
             .mapToList(Dispatchers.Default)
             .map { entities -> entities.map { it.toDomain() } }
 
+    // Dispatchers.IO is JVM-only; Dispatchers.Default is the correct off-main dispatcher
+    // for background work in KMP common code.
     suspend fun insertOrIgnore(
         id: Long,
         name: String,
